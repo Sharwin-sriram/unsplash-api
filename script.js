@@ -1,4 +1,4 @@
-const url = "https://api.unsplash.com";
+const URL = "https://api.unsplash.com";
 const image = document.getElementById("imagesdiv");
 const load_more = document.getElementById("load");
 const msg = document.getElementById("msg");
@@ -64,8 +64,8 @@ async function FetchAll(url) {
   }
 }
 
-function DataFilter(DataAsArray) {
-  const uniqe = DataAsArray.filter((item) => {
+function DataFilter(Data) {
+  const uniqe = Data.filter((item) => {
     if (shown_ids.has(item.id)) {
       return false;
     }
@@ -83,26 +83,14 @@ function DisplayPhotosHomePage(data) {
     uniqueData.map((dat) => {
       const image = dat.urls.small;
       const link = dat.urls.full;
-      const usrimgurl = dat.profile_image.large
-      const usrnme = 
-      show_IMG(image)
-      // show_IMG(image, link, usrimgurl, usrnme, hire, insta, place);
+      const usrimgurl = dat.user.profile_image.large;
+      const usrnme = dat.user.username;
+      const hire = dat.user.for_hire;
+      const insta = dat.user.instagram_username;
+      const place = dat.user.location;
+      // show_IMG(image);
+      show_IMG(image, link, usrimgurl, usrnme, hire, insta, place);
     });
-    const len = uniqueData.length;
-    for (let i = 0; i < len; i++) {
-      let image = uniqueData[i].urls.small;
-      let link = uniqueData[i].urls.full;
-      let usrimgurl = uniqueData[i].user.profile_image.large;
-      let usrnme = uniqueData[i].user.username;
-      let hire = uniqueData[i].user.for_hire;
-      let insta = uniqueData[i].user.instagram_username;
-      let place = uniqueData[i].user.location;
-      // console.log(place);
-      let usrprofile = uniqueData[i].links;
-      // console.log(usrprofile);
-
-      
-    }
   } catch (e) {
     console.log(e);
     show_IMG(data.urls.small);
@@ -176,12 +164,12 @@ load_more.addEventListener("click", () => {
   page_set += 1;
   if (query) {
     FetchAll(
-      `${url}/search/collections?page=${page_set}&query=${encodeURIComponent(
+      `${URL}/search/collections?page=${page_set}&query=${encodeURIComponent(
         query
       )}&per_page=15`
     ).then((res) => getSearchIMG(res));
   } else {
-    FetchAll(url + `/photos?page=${page_set}`).then((res) =>
+    FetchAll(URL + `/photos?page=${page_set}`).then((res) =>
       DisplayPhotosHomePage(res)
     );
   }
@@ -203,7 +191,7 @@ function Search(qu) {
   if (query) {
     shown_ids.clear();
     FetchAll(
-      `${url}/search/collections?page=${page_set}&query=${encodeURIComponent(
+      `${URL}/search/collections?page=${page_set}&query=${encodeURIComponent(
         qu
       )}&per_page=15`
     ).then((res) => getSearchIMG(res));
@@ -211,7 +199,7 @@ function Search(qu) {
   if (qu === "") {
     query = "";
     shown_ids.clear();
-    FetchAll(url + `/photos?page=${page_set}`).then((result) => {
+    FetchAll(URL + `/photos?page=${page_set}`).then((result) => {
       DisplayPhotosHomePage(result);
     });
   }
@@ -221,23 +209,20 @@ function getSearchIMG(obj) {
   uniqueobj = DataFilter(obj.results);
   arlen = uniqueobj.length;
   console.log(uniqueobj);
-
-  // console.log(arlen);
-  for (let i = 0; i < arlen; i++) {
-    // console.log(uniqueobj[i].cover_photo.urls.small);
-    let imglnk = uniqueobj[i].cover_photo.urls.small;
-    let dllink = uniqueobj[i].cover_photo.urls.full;
-    let usrimg = uniqueobj[i].cover_photo.user.profile_image.large;
-    let usrnme = uniqueobj[i].cover_photo.user.username;
-    let hire = uniqueobj[i].cover_photo.user.for_hire;
-    let insta = uniqueobj[i].cover_photo.user.instagram_username;
-    let location = uniqueobj[i].cover_photo.user.location;
+  uniqueobj.map((data) => {
+    const imglnk = data.cover_photo.urls.small;
+    const dllink = data.cover_photo.urls.full;
+    const usrimg = data.cover_photo.user.profile_image.large;
+    const usrnme = data.cover_photo.user.username;
+    const hire = data.cover_photo.user.for_hire;
+    const insta = data.cover_photo.user.instagram_username;
+    const location = data.cover_photo.user.location;
 
     show_IMG(imglnk, dllink, usrimg, usrnme, hire, insta, location);
-  }
+  });
 }
 
-window.onload = FetchAll(url + `/photos?page=${page_set}`).then((result) => {
+window.onload = FetchAll(URL + `/photos?page=${page_set}`).then((result) => {
   // console.log(result);
   DisplayPhotosHomePage(result);
 });
