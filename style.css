@@ -13,6 +13,7 @@
   --search-bg: rgb(100, 150, 200);
   --background-imagery: ;
   --switch-color: ;
+
   --usr-color: #FBFCFA;
   --font-poppins: "Poppins";
   --font-Mont: "Montserrat";
@@ -138,7 +139,7 @@ main {
 .background {
   position: fixed;
   z-index: -999;
-  font-size: 16rem;
+  font-size: clamp(15vw, 18vw, 30vw);
   top: 50%;
   left: 50%;
   font-family: var(--font-Mont);
@@ -280,7 +281,7 @@ figcaption p:hover {
   border: none;
   padding: 7px;
   border: 1px solid var(--text-load);
-  border-radius: 1rem;
+  /* border-radius: 1rem; */
   color: var(--text-load);
 }
 
@@ -291,6 +292,8 @@ figcaption p:hover {
 #msg {
   display: flex;
   justify-content: center;
+  font-family: var(--font-inter);
+  color: var(--text);
 }
 
 @media screen and (max-width:768px) {

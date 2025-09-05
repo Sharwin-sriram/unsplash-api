@@ -153,6 +153,10 @@ function show_IMG(src, link, usrIMGurl, usrnme, hire, insta, place) {
   img.src = src;
   img.className = "MAINIMAGE";
 
+  img.onclick = () => {
+    //function to be written
+  }
+
   figurediv.appendChild(a);
   figurediv.appendChild(profile);
   figurediv.appendChild(img);
