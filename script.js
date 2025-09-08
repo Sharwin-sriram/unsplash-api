@@ -5,6 +5,8 @@ const msg = document.getElementById("msg");
 const search = document.getElementById("Search");
 const mode_switch = document.getElementById("switch");
 const collection = image.getElementsByClassName("IMG_container");
+const fullscreen = document.getElementById("fullscreen");
+const close_btn = document.getElementById("close-img");
 const wait = 700;
 let timer;
 let query = "";
@@ -82,14 +84,15 @@ function DisplayPhotosHomePage(data) {
   try {
     uniqueData.map((dat) => {
       const image = dat.urls.small;
-      const link = dat.urls.full;
+      const img_large = dat.urls.full;
+      const link = dat.urls.raw;
       const usrimgurl = dat.user.profile_image.large;
       const usrnme = dat.user.username;
       const hire = dat.user.for_hire;
       const insta = dat.user.instagram_username;
       const place = dat.user.location;
       // show_IMG(image);
-      show_IMG(image, link, usrimgurl, usrnme, hire, insta, place);
+      show_IMG(image, link, usrimgurl, usrnme, hire, insta, place, img_large);
     });
   } catch (e) {
     console.log(e);
@@ -97,7 +100,7 @@ function DisplayPhotosHomePage(data) {
   }
 }
 
-function show_IMG(src, link, usrIMGurl, usrnme, hire, insta, place) {
+function show_IMG(src, link, usrIMGurl, usrnme, hire, insta, place, img_large) {
   figurediv = document.createElement("figure");
   figurediv.className = "FIG_container";
 
@@ -152,10 +155,34 @@ function show_IMG(src, link, usrIMGurl, usrnme, hire, insta, place) {
   let img = document.createElement("img");
   img.src = src;
   img.className = "MAINIMAGE";
+  // -------------------------------------------------------------------- FULLSCREEN IMAGE ------------------------------------------------ //
 
   img.onclick = () => {
-    //function to be written
-  }
+    fig_div_img_lrg = document.createElement("figure");
+    img_lrg = document.createElement("img");
+    img_lrg.src = img_large;
+    fig_div_img_lrg.appendChild(img_lrg);
+
+    fullscreen.classList.add("visible");
+
+    fullscreen.appendChild(profile);
+    fullscreen.appendChild(fig_div_img_lrg);
+    // event.stopPropagation();
+  };
+
+  window.addEventListener("keydown", (event) => {
+    console.log(event.key);
+    if (event.key === "Escape") {
+      fullscreen.removeChild(fullscreen.lastChild);
+      fullscreen.classList.remove("visible");
+    }
+  });
+  close_btn.onclick = () => {
+    fullscreen.removeChild(fullscreen.lastChild);
+    fullscreen.classList.remove("visible");
+  };
+
+  // -------------------------------------------------------------------------------------------------------------------------------------- //
 
   figurediv.appendChild(a);
   figurediv.appendChild(profile);

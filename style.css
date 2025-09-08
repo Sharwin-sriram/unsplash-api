@@ -11,6 +11,7 @@
   --text-load: black;
   --header-bg: rgba(0, 112, 210, 0.356);
   --search-bg: rgb(100, 150, 200);
+  --background-img-fulscr: white;
   --background-imagery: ;
   --switch-color: ;
 
@@ -26,6 +27,7 @@
   --header-bg: rgb(0, 59, 110);
   --search-bg: rgb(0, 78, 146);
   --switch-color: ;
+  --background-img-fulscr: rgb(60, 60, 60);
   --background-imagery: #c1d1df28;
   --text-load: white;
 }
@@ -166,10 +168,10 @@ main {
   position: relative;
 }
 
-.FIG_container .profile_pic,
-.FIG_container figcaption,
-.FIG_container .download,
-.FIG_container .place {
+.profile_pic,
+figcaption,
+.download,
+.place {
   display: none;
   position: absolute;
 }
@@ -265,6 +267,40 @@ figcaption p:hover {
 
 .FIG_container .MAINIMAGE:hover {
   filter: brightness(60%);
+}
+
+.fullscr {
+  background-color: var(--background-img-fulscr);
+  display: none;
+  position: fixed;
+  z-index: 999;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  min-width: 95%;
+  min-height: 95%;
+  isolation: isolate;
+  /* position: absolute; */
+}
+
+.fullscr img {
+  width: 100%;
+  height: 600px;
+  object-fit: fil}
+
+.visible {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+}
+
+.close-btn {
+  position: fixed;
+  cursor: pointer;
+  top: 1rem;
+  left: 1rem;
+  z-index: 99;
 }
 
 .load {
