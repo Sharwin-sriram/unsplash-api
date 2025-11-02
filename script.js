@@ -7,12 +7,12 @@ const mode_switch = document.getElementById("switch");
 const collection = image.getElementsByClassName("IMG_container");
 const fullscreen = document.getElementById("fullscreen");
 const close_btn = document.getElementById("close-img");
-const wait = 700;
-let timer;
-let query = "";
 let darkmode = localStorage.getItem("darkmode");
 
+const wait = 700;
 let page_set = 1;
+let timer;
+let query = "";
 const shown_ids = new Set();
 
 // -------------------------------------------------------------------- DARK MODE SWITCH ------------------------------------------------- //
@@ -52,6 +52,7 @@ async function FetchAll(url) {
       },
     });
     const data = await response.json();
+    console.log(data);
 
     if (data.errors) {
       console.log(data.errors[0]);
@@ -59,7 +60,6 @@ async function FetchAll(url) {
       load_more.style = "display:none";
     }
 
-    // console.log(data);
     return data;
   } catch (er) {
     console.log(er);
@@ -83,16 +83,27 @@ function DisplayPhotosHomePage(data) {
   // console.log(uniqueData);
   try {
     uniqueData.map((dat) => {
-      const image = dat.urls.small;
-      const img_large = dat.urls.full;
-      const link = dat.urls.raw;
-      const usrimgurl = dat.user.profile_image.large;
-      const usrnme = dat.user.username;
-      const hire = dat.user.for_hire;
-      const insta = dat.user.instagram_username;
-      const place = dat.user.location;
-      // show_IMG(image);
-      show_IMG(image, link, usrimgurl, usrnme, hire, insta, place, img_large);
+      const {
+        urls: { full, small, raw },
+        user: {
+          profile_image: { large },
+          username,
+          for_hire,
+          instagram_username,
+          location,
+        },
+      } = dat;
+
+      show_IMG(
+        small,
+        raw,
+        large,
+        username,
+        for_hire,
+        instagram_username,
+        location,
+        full
+      );
     });
   } catch (e) {
     console.log(e);
@@ -155,6 +166,7 @@ function show_IMG(src, link, usrIMGurl, usrnme, hire, insta, place, img_large) {
   let img = document.createElement("img");
   img.src = src;
   img.className = "MAINIMAGE";
+
   // -------------------------------------------------------------------- FULLSCREEN IMAGE ------------------------------------------------ //
 
   img.onclick = () => {
@@ -170,13 +182,13 @@ function show_IMG(src, link, usrIMGurl, usrnme, hire, insta, place, img_large) {
     // event.stopPropagation();
   };
 
-  window.addEventListener("keydown", (event) => {
+  /* window.addEventListener("keydown", (event) => {
     console.log(event.key);
     if (event.key === "Escape") {
       fullscreen.removeChild(fullscreen.lastChild);
       fullscreen.classList.remove("visible");
     }
-  });
+  }); */
   close_btn.onclick = () => {
     fullscreen.removeChild(fullscreen.lastChild);
     fullscreen.classList.remove("visible");
@@ -225,7 +237,10 @@ function Search(qu) {
       `${URL}/search/collections?page=${page_set}&query=${encodeURIComponent(
         qu
       )}&per_page=15`
-    ).then((res) => getSearchIMG(res));
+    ).then((res) => {
+      console.log(res);
+      getSearchIMG(res);
+    });
   }
   if (qu === "") {
     query = "";
@@ -241,21 +256,34 @@ function getSearchIMG(obj) {
   arlen = uniqueobj.length;
   console.log(uniqueobj);
   uniqueobj.map((data) => {
-    const imglnk = data.cover_photo.urls.small;
-    const dllink = data.cover_photo.urls.full;
+    console.log(data);
+    const {
+      cover_photo: {
+        urls: { small, large, full },
+        user: {
+          profile_image: {},
+          username,
+          for_hire,
+          instagram_username,
+          location,
+        },
+      },
+    } = data;
     const usrimg = data.cover_photo.user.profile_image.large;
-    const usrnme = data.cover_photo.user.username;
-    const hire = data.cover_photo.user.for_hire;
-    const insta = data.cover_photo.user.instagram_username;
-    const location = data.cover_photo.user.location;
 
-    show_IMG(imglnk, dllink, usrimg, usrnme, hire, insta, location);
+    show_IMG(
+      small,
+      full,
+      usrimg,
+      username,
+      for_hire,
+      instagram_username,
+      location,
+      large
+    );
   });
 }
 
 window.onload = FetchAll(URL + `/photos?page=${page_set}`).then((result) => {
-  // console.log(result);
   DisplayPhotosHomePage(result);
 });
-
-// console.log(query);
